@@ -17,11 +17,11 @@ import BuildRulesFastParameterFreeFreq
 import BuildNetwork
 import itertools
 
-
+import argparse
 
 ## Initialize algorithm parameters
-MaxOrder = 99
-MinSupport = 10
+MaxOrder = -1
+MinSupport = -1
 
 ## Initialize user parameters
 #InputFileName = '../data/traces-simulated-mesh-v100000-t100-mo4.csv'
@@ -30,14 +30,14 @@ MinSupport = 10
 
 ## Initialize user parameters
 #InputFileName = '../../../../C2/data/synthetic/1098_ModifyMixedOrder.csv'
-InputFileName = '../data/subpath_30_notime.txt'
+# InputFileName = '../data/10k_with_name.txt'
 
-#InputFileName = '../data/synthetic-major/9999.csv'
-#InputFileName = '../data/synthetic-major/1000_ModifyMixedOrder.csv'
-#InputFileName = '../data/traces-test.csv'
-#InputFileName = '../data/traces-lloyds.csv'
-OutputRulesFile = '../data/rules-cell30.csv'
-OutputNetworkFile = '../data/network-cell30.csv'
+# #InputFileName = '../data/synthetic-major/9999.csv'
+# #InputFileName = '../data/synthetic-major/1000_ModifyMixedOrder.csv'
+# #InputFileName = '../data/traces-test.csv'
+# #InputFileName = '../data/traces-lloyds.csv'
+# OutputRulesFile = '../data/rules-spotify10k.csv'
+# OutputNetworkFile = '../data/network-spotify10k.csv'
 
 LastStepsHoldOutForTesting = 0
 MinimumLengthForTraining = 1
@@ -156,6 +156,19 @@ def BuildHONfreq(InputFileName, OutputNetworkFile):
 ###########################################
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data", type=str, default="data", help="input file name in data/ folder")
+    parser.add_argument("--maxorder", type=int, default=99, help="max order")
+    parser.add_argument("--minsupport", type=int, default=2, help="max order")
+    args = parser.parse_args()
+
+    MaxOrder = args.maxorder
+    MinSupport = args.minsupport
+
+    InputFileName = 'data/{}'.format(args.data)
+    OutputRulesFile = 'data/rules-{}.csv'.format(args.data)
+    OutputNetworkFile = 'data/network-{}.csv'.format(args.data)
+
     print('FREQ mode!!!!!!')
     RawTrajectories = ReadSequentialData(InputFileName)
     TrainingTrajectory, TestingTrajectory = BuildTrainingAndTesting(RawTrajectories)

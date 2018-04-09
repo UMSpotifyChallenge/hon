@@ -4,12 +4,18 @@
 
 
 import networkx as nx
+import argparse
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--data", type=str, default="data", help="input file name in data/ folder")
+args = parser.parse_args()
 
 G = nx.DiGraph()
 
 print('reading network')
 
-with open('network-synthetic.csv') as f:
+with open('data/network-{}.csv'.format(args.data)) as f:
     for line in f:
         fields = line.strip().split(',')
         eFrom = fields[0]
@@ -36,7 +42,7 @@ print('writing pr')
 
 nodes = sorted(RealPR.keys(), key=lambda x: RealPR[x], reverse=True)
 
-with open('pagerank-synthetic.csv', 'w') as f:
+with open('data/pagerank-{}.csv'.format(args.data), 'w') as f:
     for node in nodes:
         f.write(node + ',' + str(RealPR[node]) + '\n')
 
