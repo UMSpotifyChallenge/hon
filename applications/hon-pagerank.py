@@ -25,6 +25,7 @@ with open('data/network-{}.csv'.format(args.data)) as f:
 
 print('computing pr')
 
+# TODO. personalization....
 pr = nx.pagerank(G, alpha=0.85, weight = 'weight', tol=1e-09, max_iter=1000)
 
 RealPR = {}
