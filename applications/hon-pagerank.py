@@ -51,7 +51,7 @@ for testSet in test_plists:
         tempDict[key] = 1
 
     print('converting pr')
-    pr = nx.pagerank(G, alpha=0.85, personalization = tempDict, weight = 'weight', tol=1e-09, max_iter=1000)
+    pr = nx.pagerank(G, alpha=0.85, personalization = tempDict, weight = 'weight', tol=1e-06, max_iter=500)
     print('pr converted')
 
     RealPR = {}
