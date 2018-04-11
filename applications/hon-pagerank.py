@@ -35,7 +35,7 @@ PageRank will run and the top PageRanked songs will be compared to the missing s
 This loop will only handle generating PageRank results. Not evaluating them.
 '''
 test_plists = []
-with open("testing_1000.txt",'r') as f:
+with open("data/hon_testing_1000.txt",'r') as f:
     test_plists = json.loads(f) # list with each item a dict with two keys: 'seed' and 'hidden'
 
 testSetNum = 0
