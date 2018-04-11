@@ -5,6 +5,7 @@
 
 import networkx as nx
 import argparse
+import json
 
 
 parser = argparse.ArgumentParser()
@@ -26,25 +27,46 @@ with open('data/network-{}.csv'.format(args.data)) as f:
 print('computing pr')
 
 # TODO. personalization....
-pr = nx.pagerank(G, alpha=0.85, weight = 'weight', tol=1e-09, max_iter=1000)
+'''
+Will need a loop here to loop over all training set playlists
+Each training set playlist should be missing a percentage of its original songs
+PageRank will run and the top PageRanked songs will be compared to the missing set
 
-RealPR = {}
+This loop will only handle generating PageRank results. Not evaluating them.
+'''
+test_plists = []
+with open("testing_1000.txt",'r') as f:
+    test_plists = json.loads(f) # list with each item a dict with two keys: 'seed' and 'hidden'
 
-print('converting pr')
+testSetNum = 0
+for testSet in test_plists:
 
-for node in pr:
-    fields = node.split('|')
-    FirstOrderNode = fields[0]
-    if not FirstOrderNode in RealPR:
-        RealPR[FirstOrderNode] = 0
-    RealPR[FirstOrderNode] += pr[node]
+    tempDict = {}
+    ## first, need to make a dict for the 'seed tracks' / 'personalization vector'
+    ## dict is songID -> personalization value (1)
+    for s in testSet["seed"]: # for each seed song ID
+        tempDict[s] = 1
 
-print('writing pr')
 
-nodes = sorted(RealPR.keys(), key=lambda x: RealPR[x], reverse=True)
+    pr = nx.pagerank(G, alpha=0.85, personalization = tempDict, weight = 'weight', tol=1e-09, max_iter=1000)
 
-with open('data/pagerank-{}.csv'.format(args.data), 'w') as f:
-    for node in nodes:
-        f.write(node + ',' + str(RealPR[node]) + '\n')
+    RealPR = {}
 
-print('finished')
+    print('converting pr')
+
+    for node in pr:
+        fields = node.split('|')
+        FirstOrderNode = fields[0]
+        if not FirstOrderNode in RealPR:
+            RealPR[FirstOrderNode] = 0
+        RealPR[FirstOrderNode] += pr[node]
+
+    print('writing pr for test set {}'.format(str(testSetNum)))
+
+    nodes = sorted(RealPR.keys(), key=lambda x: RealPR[x], reverse=True)
+
+    with open('data/pagerank-{}-TestSet_{}.csv'.format(args.data, testSetNum), 'w') as f:
+        for node in nodes:
+            f.write(node + ',' + str(RealPR[node]) + '\n')
+
+    testSetNum += 1
