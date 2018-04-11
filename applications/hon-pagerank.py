@@ -36,7 +36,7 @@ This loop will only handle generating PageRank results. Not evaluating them.
 '''
 test_plists = []
 with open("data/hon_testing_1000.txt",'r') as f:
-    test_plists = json.loads(f) # list with each item a dict with two keys: 'seed' and 'hidden'
+    test_plists = json.loads(f.read()) # list with each item a dict with two keys: 'seed' and 'hidden'
 
 testSetNum = 0
 for testSet in test_plists:
