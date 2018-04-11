@@ -40,6 +40,7 @@ with open("data/hon_testing_1000.txt",'r') as f:
 
 testSetNum = 0
 for testSet in test_plists:
+    print('starting test set {}'.format(str(testSetNum)))
 
     tempDict = {}
     ## first, need to make a dict for the 'seed tracks' / 'personalization vector'
@@ -48,13 +49,11 @@ for testSet in test_plists:
         key = s+"|"
         tempDict[key] = 1
 
-
+    print('converting pr')
     pr = nx.pagerank(G, alpha=0.85, personalization = tempDict, weight = 'weight', tol=1e-09, max_iter=1000)
+    print('pr converted')
 
     RealPR = {}
-
-    print('converting pr')
-
     for node in pr:
         fields = node.split('|')
         FirstOrderNode = fields[0]
@@ -62,12 +61,18 @@ for testSet in test_plists:
             RealPR[FirstOrderNode] = 0
         RealPR[FirstOrderNode] += pr[node]
 
-    print('writing pr for test set {}'.format(str(testSetNum)))
+    print('writing rank for test set {}'.format(str(testSetNum)))
 
     nodes = sorted(RealPR.keys(), key=lambda x: RealPR[x], reverse=True)
 
-    with open('data/pagerank-{}-TestSet_{}.csv'.format(args.data, testSetNum), 'w') as f:
-        for node in nodes:
-            f.write(node + ',' + str(RealPR[node]) + '\n')
+    result = {}
+    for hidden in testSet["hidden"]:
+        rank = nodes.index(hidden) if hidden in nodes else -1
+        result[rank] = hidden
+
+    with open('data/rank_hidden_tracks-{}-test{}.csv'.format(args.data, testSetNum), 'w') as f:
+        for rank in sorted(result):
+            node = result[rank]
+            f.write(node + ',' + str(rank) + '\n')
 
     testSetNum += 1
