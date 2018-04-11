@@ -45,7 +45,8 @@ for testSet in test_plists:
     ## first, need to make a dict for the 'seed tracks' / 'personalization vector'
     ## dict is songID -> personalization value (1)
     for s in testSet["seed"]: # for each seed song ID
-        tempDict[s] = 1
+        key = s+"|"
+        tempDict[key] = 1
 
 
     pr = nx.pagerank(G, alpha=0.85, personalization = tempDict, weight = 'weight', tol=1e-09, max_iter=1000)
