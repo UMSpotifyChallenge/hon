@@ -10,6 +10,7 @@ import json
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--data", type=str, default="data", help="input file name in data/ folder")
+parser.add_argument("--test", type=str, default="test", help="test file name in data/ folder")
 args = parser.parse_args()
 
 G = nx.DiGraph()
@@ -35,7 +36,7 @@ PageRank will run and the top PageRanked songs will be compared to the missing s
 This loop will only handle generating PageRank results. Not evaluating them.
 '''
 test_plists = []
-with open("data/hon_testing_1000.txt",'r') as f:
+with open("data/{}".format(args.test),'r') as f:
     test_plists = json.loads(f.read()) # list with each item a dict with two keys: 'seed' and 'hidden'
 
 testSetNum = 0
