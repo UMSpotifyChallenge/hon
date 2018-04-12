@@ -1,10 +1,16 @@
 import csv
 from os import listdir
+import argparse
 # from os.path import isfile, join
 
-files = [f for f in listdir(".")]
+parser = argparse.ArgumentParser()
+parser.add_argument("--path", type=str, default=".", help="path for testing result folder")
+parser.add_argument("--size", type=int, default=0, help="input track size")
+args = parser.parse_args()
 
-track_counts = 248572
+files = [f for f in listdir(args.path)]
+
+track_counts = args.size
 cond_top01p = track_counts * 0.01
 cond_top02p = track_counts * 0.025
 cond_top05p = track_counts * 0.05
@@ -17,6 +23,7 @@ top02p_count = 0
 top05p_count = 0
 top10p_count = 0
 
+none_count = 0
 result_per_pl = []
 
 
@@ -40,21 +47,24 @@ for path in files:
         per_pl_testing_count += 1
 
         rank = int(row[1])
-        if rank < 500:
-            top500_count += 1
-            per_pl_top500_count += 1
-        if rank < cond_top01p:
-            top01p_count += 1
-            per_pl_top01p_count += 1
-        if rank < cond_top02p:
-            top02p_count += 1
-            per_pl_top02p_count += 1
-        if rank < cond_top05p:
-            top05p_count += 1
-            per_pl_top05p_count += 1
-        if rank < cond_top10p:
-            top10p_count += 1
-            per_pl_top10p_count += 1
+        if rank != -1:
+            if rank < 500:
+                top500_count += 1
+                per_pl_top500_count += 1
+            if rank < cond_top01p:
+                top01p_count += 1
+                per_pl_top01p_count += 1
+            if rank < cond_top02p:
+                top02p_count += 1
+                per_pl_top02p_count += 1
+            if rank < cond_top05p:
+                top05p_count += 1
+                per_pl_top05p_count += 1
+            if rank < cond_top10p:
+                top10p_count += 1
+                per_pl_top10p_count += 1
+        else:
+            none_count += 1
 
     result = []
     result.append(per_pl_top500_count / per_pl_testing_count * 100)
@@ -79,6 +89,10 @@ with open('result.csv', 'w') as csvfile:
 
     for r in result_per_pl:
         csvwriter.writerow(r)
+
+
+print(none_count)
+print(testing_count)
 
 # print(top500_count/testing_count * 100)
 # print(top01p_count/testing_count * 100)
