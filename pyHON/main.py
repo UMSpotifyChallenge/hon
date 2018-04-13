@@ -159,7 +159,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--data", type=str, default="data", help="input file name in data/ folder")
     parser.add_argument("--maxorder", type=int, default=99, help="max order")
-    parser.add_argument("--minsupport", type=int, default=2, help="max order")
+    parser.add_argument("--minsupport", type=int, default=1, help="min support")
     args = parser.parse_args()
 
     MaxOrder = args.maxorder
