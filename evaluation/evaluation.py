@@ -5,7 +5,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--path", type=str, default=".", help="path for testing result folder")
-parser.add_argument("--size", type=int, default=0, help="input track size")
+parser.add_argument("--size", type=int, default=0, help="# of unique tracks")
 args = parser.parse_args()
 
 files = [f for f in listdir(args.path)]
