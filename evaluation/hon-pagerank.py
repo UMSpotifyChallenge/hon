@@ -12,6 +12,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--data", type=str, default="data", help="input file name in data/ folder")
 parser.add_argument("--test", type=str, default="test", help="test file name in data/ folder")
 parser.add_argument("--start", type=int, default=0, help="start index of testing to split works among different servers :)")
+parser.add_argument("--stop", type=int, default=99999999, help="stop index of testing to split works among different servers :)")
 args = parser.parse_args()
 
 G = nx.DiGraph()
@@ -40,12 +41,19 @@ test_plists = []
 with open("data/{}".format(args.test),'r') as f:
     test_plists = json.loads(f.read()) # list with each item a dict with two keys: 'seed' and 'hidden'
 
+# convert values to strings
+for j in test_plists:
+    for k in j.keys():
+        j[k] = str(j[k])
+    
 testSetNum = 0
 for testSet in test_plists:
     if testSetNum < args.start:
         print('SKIP test set {}'.format(str(testSetNum)))
         testSetNum += 1
         continue
+    if testSetNum > args.stop:
+        break
         
     print('starting test set {}'.format(str(testSetNum)))
 
