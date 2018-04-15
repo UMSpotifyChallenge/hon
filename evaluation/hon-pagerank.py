@@ -42,9 +42,9 @@ with open("data/{}".format(args.test),'r') as f:
     test_plists = json.loads(f.read()) # list with each item a dict with two keys: 'seed' and 'hidden'
 
 # convert values to strings
-for j in test_plists:
-    for k in j.keys():
-        j[k] = str(j[k])
+for p in test_plists:
+    for k in p.keys():
+        p[k] = list(map(str, p[k]))
     
 testSetNum = 0
 for testSet in test_plists:
