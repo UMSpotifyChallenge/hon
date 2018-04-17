@@ -25,6 +25,7 @@ top10p_count = 0
 
 none_count = 0
 result_per_pl = []
+result_per_pl_prec = []
 
 
 
@@ -73,13 +74,23 @@ for path in files:
     result.append(per_pl_top05p_count / per_pl_testing_count * 100)
     result.append(per_pl_top10p_count / per_pl_testing_count * 100)
 
+    result_prec = []
+    result_prec.append(per_pl_top500_count / float(500) * 100)
+    result_prec.append(per_pl_top01p_count / cond_top01p * 100)
+    result_prec.append(per_pl_top02p_count / cond_top02p * 100)
+    result_prec.append(per_pl_top05p_count / cond_top05p * 100)
+    result_prec.append(per_pl_top10p_count / cond_top10p * 100)
+
     result_per_pl.append(result)
+
+    result_per_pl_prec.append(result_prec)
 
 
 with open('result.csv', 'w') as csvfile:
     csvwriter = csv.writer(csvfile)
 
     overall_result = []
+    overall_result.append("#Overall Results: ")
     overall_result.append(top500_count / testing_count * 100)
     overall_result.append(top01p_count / testing_count * 100)
     overall_result.append(top02p_count / testing_count * 100)
@@ -90,6 +101,12 @@ with open('result.csv', 'w') as csvfile:
     for r in result_per_pl:
         csvwriter.writerow(r)
 
+
+with open('result_prec.csv', 'w') as csvfile:
+    csvwriter = csv.writer(csvfile)
+
+    for r in result_per_pl_prec:
+        csvwriter.writerow(r)
 
 print(none_count)
 print(testing_count)
